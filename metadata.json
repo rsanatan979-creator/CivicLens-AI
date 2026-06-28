@@ -1,0 +1,6 @@
+{
+  "name": "CivicAgent",
+  "description": "A modern, high-fidelity civic reporting and municipal administration platform with interactive citizens, reports registry, and predictive analytics dashboards.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

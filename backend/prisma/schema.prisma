@@ -1,0 +1,103 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  uid          String         @id
+  email        String         @unique
+  name         String
+  role         String         @default("CITIZEN")
+  points       Int            @default(100)
+  joinedAt     String         @map("joined_at")
+  avatarUrl    String         @default("https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150") @map("avatar_url")
+  passwordHash String?        @map("password_hash")
+  complaints   Complaint[]    @relation("ReportedBy")
+  verifications Verification[]
+
+  @@map("users")
+}
+
+model Department {
+  id   String @id
+  name String @unique
+
+  @@map("departments")
+}
+
+model Complaint {
+  id            String          @id
+  title         String
+  description   String
+  category      String
+  status        String          @default("PENDING")
+  severity      String          @default("MEDIUM")
+  imageUrl      String          @map("image_url")
+  locationName  String          @map("location_name")
+  latitude      Float
+  longitude     Float
+  citizenId     String          @map("citizen_id")
+  assignedDept  String          @map("assigned_dept")
+  aiConfidence  Float           @default(0.85) @map("ai_confidence")
+  upvotes       Int             @default(0) @map("upvotes")
+  reportedBy    String          @map("reported_by")
+  createdAt     DateTime        @default(now()) @map("created_at")
+  updatedAt     DateTime        @updatedAt @map("updated_at")
+
+  citizen       User            @relation("ReportedBy", fields: [citizenId], references: [uid], onDelete: Cascade)
+  verifications Verification[]
+  timeline      TimelineItem[]
+
+  @@index([citizenId])
+  @@index([assignedDept])
+  @@map("complaints")
+}
+
+model Verification {
+  id          String   @id
+  complaintId String   @map("complaint_id")
+  citizenId   String   @map("citizen_id")
+  voteType    String   @map("vote_type")
+  timestamp   DateTime @default(now())
+
+  complaint   Complaint @relation(fields: [complaintId], references: [id], onDelete: Cascade)
+  citizen     User      @relation(fields: [citizenId], references: [uid], onDelete: Cascade)
+
+  @@unique([complaintId, citizenId])
+  @@map("verifications")
+}
+
+model TimelineItem {
+  id          String    @id
+  complaintId String    @map("complaint_id")
+  status      String
+  description String
+  timestamp   String
+  isCurrent   Boolean   @default(false) @map("is_current")
+
+  complaint   Complaint @relation(fields: [complaintId], references: [id], onDelete: Cascade)
+
+  @@map("timeline_items")
+}
+
+model Prediction {
+  id             String @id
+  areaName       String @map("area_name")
+  riskScore      Float  @map("risk_score")
+  predictedIssue String @map("predicted_issue")
+
+  @@map("predictions")
+}
+
+model SystemLog {
+  id        String   @id
+  text      String
+  type      String
+  timestamp String
+
+  @@map("system_logs")
+}

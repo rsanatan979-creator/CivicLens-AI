@@ -8,4 +8,8 @@ coverage/
 !.env.example
 backend/prisma/dev.db*
 backend/uploads/
+__pycache__/
+.venv/
+*.pyc
+
 

@@ -26,8 +26,9 @@ services:
         generateValue: true
       - key: AI_SERVICE_URL
         fromService:
+          type: web
           name: civiclens-ai-service
-          value: url
+          envVarKey: RENDER_EXTERNAL_URL
       - key: NODE_ENV
         value: production
 

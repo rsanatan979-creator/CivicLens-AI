@@ -106,7 +106,7 @@ router.post('/upload', (req, res) => {
     }
     const buffer = Buffer.from(base64Data, 'base64');
     const filename = `upload_${Date.now()}_${crypto.randomBytes(4).toString('hex')}.${fileExt}`;
-    const uploadDir = path.join(__dirname, '../../uploads');
+    const uploadDir = path.join(process.cwd(), 'backend/uploads');
     
     if (!fs.existsSync(uploadDir)) {
       fs.mkdirSync(uploadDir, { recursive: true });

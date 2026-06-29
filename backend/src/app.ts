@@ -83,7 +83,7 @@ app.use('/api/', apiLimiter);
 app.use('/api/v1/predict', aiLimiter);
 
 // 7. Register Centralized Routing Gateway
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+app.use('/uploads', express.static(path.join(process.cwd(), 'backend/uploads')));
 app.use('/api/v1', apiRouter);
 
 // 8. Global Error Handling Middleware

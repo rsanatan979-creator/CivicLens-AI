@@ -26,9 +26,7 @@ export async function runMigrations() {
     winstonLogger.debug(output);
   } catch (error: any) {
     winstonLogger.error('❌ Failed to synchronize database schema:', error);
-    if (process.env.NODE_ENV === 'production') {
-      throw error;
-    }
-    winstonLogger.warn('⚠️ Development server continuing boot. Start PostgreSQL on localhost:5432 or update the DATABASE_URL in your .env file to enable database operations.');
+    // Allow boot to continue even if database is not active
+    winstonLogger.warn('⚠️ Server continuing boot. Start PostgreSQL or update the DATABASE_URL in your .env file to enable database operations.');
   }
 }
